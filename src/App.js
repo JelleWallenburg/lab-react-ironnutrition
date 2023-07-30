@@ -1,25 +1,49 @@
-import logo from './logo.svg';
 import './App.css';
+import FoodBox from './components/FoodBox';
+import AddFoodForm from './components/AddFoodForm';
+import SearchBar from './components/SearchBar';
+import foodsJSON from './foods.json';
+import { useState } from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  const [foods, setFoods] = useState(foodsJSON);
+  const [foodsData, setFoodsData] = useState(foodsJSON);
+
+  const filterFoods= (str) =>{
+    let filteredFoods;
+    if (str==='All'){
+      filteredFoods= foodsData;
+    } else {
+      filteredFoods= foodsData.filter((food)=> food.name.includes(str))
+    }
+    setFoodsData(filteredFoods);
+   }
+
+  return(
+    <div>
+      <SearchBar filterFoods={filterFoods}/>
+      <AddFoodForm foods={foods} setFoods={setFoods} foodsData={foods} setFoodsData={setFoodsData}/>
+      <h1>Food List</h1>
+      {foodsData.map(food => {
+        return(
+          <FoodBox food={ {
+            name: food.name,
+            calories: food.calories,
+            image: food.image,
+            servings: food.servings
+          }} setFoodsData={setFoodsData}/>
+        )
+      })}     
     </div>
-  );
+  )
+  // return (
+  //   <div className="App">
+  //           <div>
+  //           <p></p>
+  //           <img></img>
+  //       </div>
+  //   </div>
+  // );
 }
 
 export default App;
